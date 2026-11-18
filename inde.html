@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>PENJAGA WIFI - Game Hacker</title>
+<style>
+  body { background: #000; color: #00ff00; font-family: monospace; text-align: center; }
+  h1 { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
+  #gameArea { width: 400px; height: 400px; background: #111; margin: 20px auto; position: relative; border: 2px solid #00ff00; overflow: hidden; }
+  .maling { position: absolute; font-size: 40px; cursor: pointer; }
+  button { background: #00ff00; color: black; padding: 10px 20px; font-size: 18px; font-weight: bold; border: none; cursor: pointer; }
+  #info { font-size: 20px; margin: 10px; }
+</style>
+</head>
+<body>
+
+<h1>🛡️ PENJAGA WIFI 🛡️</h1>
+<p>Tangkap maling WiFi sebelum dia curi password lu!</p>
+
+<div id="info">
+  Skor: <span id="skor">0</span> | Nyawa: <span id="nyawa">3</span>
+</div>
+
+<button onclick="mulaiGame()">MULAI GAME</button>
+
+<div id="gameArea"></div>
+<p id="pesan"></p>
+
+<script>
+  // Ini tempat simpan skor dan nyawa lu
+  let skor = 0;
+  let nyawa = 3;
+  let gameJalan = false;
+
+  // Fungsi buat mulai game
+  function mulaiGame() {
+    skor = 0;
+    nyawa = 3;
+    gameJalan = true;
+    document.getElementById('skor').innerText = skor;
+    document.getElementById('nyawa').innerText = nyawa;
+    document.getElementById('pesan').innerText = "Game jalan! Klik malingnya!";
+    munculinMaling();
+  }
+
+  // Fungsi buat munculin maling secara acak
+  function munculinMaling() {
+    if (!gameJalan) return;
+
+    let area = document.getElementById('gameArea');
+    area.innerHTML = ""; // Bersihin area
+
+    // Bikin maling baru
+    let maling = document.createElement('div');
+    maling.className = 'maling';
+    maling.innerText = '🦹'; // Emoji maling
+
+    // Posisi acak di dalam kotak
+    maling.style.left = Math.random() * 340 + 'px';
+    maling.style.top = Math.random() * 340 + 'px';
+
+    // Kalau maling di-klik, skor naik
+    maling.onclick = function() {
+      skor = skor + 10;
+      document.getElementById('skor').innerText = skor;
+      munculinMaling(); // Munculin maling baru
+    };
+
+    area.appendChild(maling);
+
+    // Kalau dalam 1 detik gak di-klik, maling lolos, nyawa berkurang
+    setTimeout(function() {
+      if (gameJalan && area.contains(maling)) {
+        nyawa = nyawa - 1;
+        document.getElementById('nyawa').innerText = nyawa;
+
+        if (nyawa <= 0) {
+          gameJalan = false;
+          document.getElementById('pesan').innerText = "GAME OVER! WiFi lu ke bobolan! Skor akhir: " + skor;
+          area.innerHTML = "";
+        } else {
+          munculinMaling();
+        }
+      }
+    }, 1000);
+  }
+</script>
+
+</body>
+</html>
